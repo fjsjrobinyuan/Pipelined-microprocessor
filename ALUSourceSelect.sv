@@ -1,6 +1,6 @@
 module ALUSourceSelect(
-    input logic [31:0] immediate,
-    input logic [31:0] operandA, 
+    input logic [31:0] immediate,//immediate value directly from the instruction
+    input logic [31:0] operandA,//number read from the register file
     input logic [31:0] operandB, 
     input logic [1:0] sourceSelect,
     output logic [31:0] resultA, 
