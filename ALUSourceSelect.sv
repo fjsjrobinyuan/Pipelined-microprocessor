@@ -1,4 +1,4 @@
-module ALU (
+module ALUSourceSelect(
     input logic [31:0] immediate,
     input logic [31:0] operandA, 
     input logic [31:0] operandB, 
