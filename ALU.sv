@@ -1,23 +1,41 @@
 module ALU (
-    input logic [31:0] operandA,
-    input logic [31:0] operandB,
-    input logic [2:0] opcode,
-    output logic [31:0] result,
-    output logic errorTypeInfty
+    input logic [31:0] operandA, // Input operand A (32-bit)
+    input logic [31:0] operandB, // Input operand B (32-bit)
+    input logic [1:0] aluControl, // ALU control signals (e.g., 00000 for addition, 01010 for comparison)
+    output logic [31:0] result, // ALU result (32-bit)
+    output logic [1:0] compareResult, // Comparison result (00: equal, 10: A > B, 01: A < B)
+    output logic overflow // Overflow flag (1 if overflow, 0 otherwise)
 );
-    
+
 always_comb begin
-    case(opcode)
-        3'b000: result = operandA + operandB;  
-        3'b001: result = operandA - operandB; 
-        3'b010: result = operandA * operandB;  
-        3'b011: begin
-            if (operandB != 0) 
-                result = operandA / operandB; 
+    case (aluControl)
+        2'b00: begin
+            result = operandA + operandB;
+            if ((operandA[31] == operandB[31]) && (result[31] != operandA[31]))
+                overflow = 1'b1;
             else
-                errorTypeInfty <= 1'b1;
-        end
-        default: result = 32'b0;
+                overflow = 1'b0;
+            end
+        2'b01: begin
+            result = operandA - operandB;
+            if ((operandA[31] != operandB[31]) && (result[31] != operandA[31]))
+                overflow = 1'b1;
+            else
+                overflow = 1'b0;
+            end
+        2'b11: begin
+           result = operandA * operandB;
+           overflow = 1'b0;
+           end
+        2'b10: begin
+           if (operandA > operandB) 
+              compareResult = 2'b10;
+           else if (operandA < operandB)
+              compareResult = 2'b01;
+           else if (operandA == operandB)
+              compareResult = 2'b00;
+           end       
     endcase
 end
+
 endmodule
