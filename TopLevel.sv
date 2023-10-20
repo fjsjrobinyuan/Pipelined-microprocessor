@@ -17,13 +17,17 @@ datapathController dpct(.instruction(instruction),
                         .PCChangeEnable,
                         .computationSelect(alu.aluControl),
                         .target,
-                        .sourceA,
-                        .sourceB,
-                        .immediate(aluss.immediate)
+                        .sourceAAdd,
+                        .operandAReadRF,
+                        .sourceBAdd,
+                        .operandBReadRF,
+                        .immediate(aluss.immediate),
+                        .operandAtobeSelected(aluss.operandA),
+                        .operandBtobeSelected(aluss.operandB)
                         );
 ALUSourceSelect aluss(.immediate(dpct.immediate),
-                      .operandA(sourceA),
-                      .operandB(sourceA),
+                      .operandA(dpct.operandAtobeSelected),
+                      .operandB(dpct.operandBtobeSelected),
                       .sourceSelect(dpct.sourceSelect),
                       .resultA(alu.operandA),
                       .resultB(alu.operandB)
